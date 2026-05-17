@@ -1,3 +1,5 @@
+import type { Bookmark } from './types';
+
 /**
  * Settings interface
  */
@@ -11,6 +13,8 @@ export interface Settings {
   premium_unlocked: boolean;
   [key: string]: any;
 }
+
+export const BOOKMARKS_KEY = 'bookmarks';
 
 /**
  * Default settings
@@ -92,5 +96,35 @@ export const storage = {
         resolve();
       });
     });
-  }
+  },
+
+  /**
+   * Load persisted bookmarks list.
+   */
+  async getBookmarks(): Promise<Bookmark[]> {
+    const raw = await new Promise<unknown>((resolve) => {
+      chrome.storage.local.get({ [BOOKMARKS_KEY]: [] }, (items) => {
+        resolve(items[BOOKMARKS_KEY]);
+      });
+    });
+    if (!Array.isArray(raw)) return [];
+    return raw.filter(
+      (b): b is Bookmark =>
+        !!b &&
+        typeof (b as Bookmark).id === 'string' &&
+        typeof (b as Bookmark).url === 'string' &&
+        typeof (b as Bookmark).createdAt === 'number',
+    );
+  },
+
+  /**
+   * Persist bookmarks list.
+   */
+  async setBookmarks(bookmarks: Bookmark[]): Promise<void> {
+    return new Promise((resolve) => {
+      chrome.storage.local.set({ [BOOKMARKS_KEY]: bookmarks }, () => {
+        resolve();
+      });
+    });
+  },
 };

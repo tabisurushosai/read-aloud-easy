@@ -33,7 +33,7 @@
 - [x] T026: speed-pitch — 実装
 - [x] T027: speed-pitch — テスト・整合
 - [x] T028: bookmark — 設計
-- [ ] T029: bookmark — 実装
+- [x] T029: bookmark — 実装
 - [ ] T030: bookmark — テスト・整合
 
 ## Phase 4: Premium ゲート (T031-T033)

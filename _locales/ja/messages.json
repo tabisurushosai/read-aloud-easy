@@ -43,6 +43,38 @@
     "message": "ブックマーク",
     "description": "Bookmark button text"
   },
+  "popup_bookmark_add": {
+    "message": "ブックマークに追加",
+    "description": "Bookmark create button label"
+  },
+  "popup_bookmark_remove": {
+    "message": "削除",
+    "description": "Bookmark remove button label"
+  },
+  "popup_bookmarks_heading": {
+    "message": "ブックマーク",
+    "description": "Bookmark list heading"
+  },
+  "popup_bookmark_empty": {
+    "message": "まだブックマークはありません",
+    "description": "Empty bookmark list placeholder"
+  },
+  "popup_bookmark_added": {
+    "message": "ブックマークに追加しました",
+    "description": "Status after bookmark created"
+  },
+  "popup_bookmark_failed": {
+    "message": "ブックマークに失敗しました",
+    "description": "Status when bookmark creation fails"
+  },
+  "popup_bookmark_limit": {
+    "message": "上限に達しました (Premium で解除)",
+    "description": "Status when free bookmark limit reached"
+  },
+  "popup_bookmark_unavailable": {
+    "message": "このページではブックマークできません",
+    "description": "Shown for pages where bookmarking is blocked"
+  },
   "options_title": {
     "message": "設定",
     "description": "Options page title"

@@ -55,8 +55,15 @@
                 </div>
             </section>
 
-            <section class="actions">
-                <button id="bookmark" data-i18n="popup_bookmark">ブックマーク</button>
+            <section class="actions bookmark-actions">
+                <button id="bookmark" data-i18n="popup_bookmark_add">ブックマークに追加</button>
+                <span id="bookmark-status" class="bookmark-status" aria-live="polite"></span>
+            </section>
+
+            <section class="bookmarks" aria-labelledby="bookmarks-heading">
+                <h2 id="bookmarks-heading" class="bookmarks-heading" data-i18n="popup_bookmarks_heading">ブックマーク</h2>
+                <ul id="bookmark-list" class="bookmark-list"></ul>
+                <p id="bookmark-empty" class="bookmark-empty" data-i18n="popup_bookmark_empty">まだブックマークはありません</p>
             </section>
         </main>
 
