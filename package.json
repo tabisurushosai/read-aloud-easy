@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint src --ext .ts",
-    "test": "tsx tests/speed-pitch.test.ts",
+    "test": "tsx tests/speed-pitch.test.ts && tsx tests/bookmark.test.ts",
     "package": "mkdir -p release && zip -r release/read-aloud-easy.zip dist"
   },
   "devDependencies": {
