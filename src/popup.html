@@ -2,9 +2,57 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Popup</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="popup_title">やさしい読み上げ</title>
+    <link rel="stylesheet" href="./popup.css">
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1 data-i18n="popup_title">やさしい読み上げ</h1>
+        </header>
+
+        <main>
+            <section class="controls">
+                <button id="play" class="btn-primary" data-i18n="popup_play">再生</button>
+                <button id="pause" data-i18n="popup_pause">一時停止</button>
+                <button id="stop" data-i18n="popup_stop">停止</button>
+            </section>
+
+            <section class="settings">
+                <div class="setting-item">
+                    <label for="speed" data-i18n="popup_speed">速度</label>
+                    <input type="range" id="speed" min="0.5" max="2.0" step="0.1" value="1.0">
+                    <span id="speed-value">1.0</span>
+                </div>
+                <div class="setting-item">
+                    <label for="pitch" data-i18n="popup_pitch">ピッチ</label>
+                    <input type="range" id="pitch" min="0.5" max="2.0" step="0.1" value="1.0">
+                    <span id="pitch-value">1.0</span>
+                </div>
+                <div class="setting-item">
+                    <label class="toggle">
+                        <input type="checkbox" id="furigana">
+                        <span data-i18n="popup_furigana">ふりがな</span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <label class="toggle">
+                        <input type="checkbox" id="highlight">
+                        <span data-i18n="popup_highlight">ハイライト</span>
+                    </label>
+                </div>
+            </section>
+
+            <section class="actions">
+                <button id="bookmark" data-i18n="popup_bookmark">ブックマーク</button>
+            </section>
+        </main>
+
+        <footer>
+            <a href="options.html" target="_blank" data-i18n="options_title">設定</a>
+        </footer>
+    </div>
     <script type="module" src="./popup.ts"></script>
 </body>
 </html>
