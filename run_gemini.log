@@ -31,3 +31,8 @@ Completed T004: Implement manifest.json with V3 configuration and required permi
 YOLO mode is enabled. All tool calls will be automatically approved.
 YOLO mode is enabled. All tool calls will be automatically approved.
 Ripgrep is not available. Falling back to GrepTool.
+T005 implemented: Created `_locales/ja/messages.json` with Japanese translations and updated `TODO.md`.
+[2026-05-17 23:06:02] [read-aloud-easy Loop 6] 残 30 タスク (yolo)...
+YOLO mode is enabled. All tool calls will be automatically approved.
+YOLO mode is enabled. All tool calls will be automatically approved.
+Ripgrep is not available. Falling back to GrepTool.

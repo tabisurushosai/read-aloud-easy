@@ -1,0 +1,54 @@
+{
+  "appName": {
+    "message": "Read Aloud Easy",
+    "description": "The name of the extension."
+  },
+  "appDesc": {
+    "message": "Dyslexia-friendly web reader (speed adjustment, furigana, difficult word highlighting)",
+    "description": "The description of the extension."
+  },
+  "popup_title": {
+    "message": "Read Aloud Easy",
+    "description": "Title of the popup"
+  },
+  "popup_play": {
+    "message": "Play",
+    "description": "Play button text"
+  },
+  "popup_pause": {
+    "message": "Pause",
+    "description": "Pause button text"
+  },
+  "popup_stop": {
+    "message": "Stop",
+    "description": "Stop button text"
+  },
+  "popup_furigana": {
+    "message": "Furigana",
+    "description": "Furigana toggle text"
+  },
+  "popup_highlight": {
+    "message": "Highlight",
+    "description": "Highlight toggle text"
+  },
+  "popup_speed": {
+    "message": "Speed",
+    "description": "Speed control label"
+  },
+  "popup_pitch": {
+    "message": "Pitch",
+    "description": "Pitch control label"
+  },
+  "popup_bookmark": {
+    "message": "Bookmark",
+    "description": "Bookmark button text"
+  },
+  "options_title": {
+    "message": "Settings",
+    "description": "Options page title"
+  },
+  "options_save": {
+    "message": "Save",
+    "description": "Save button text"
+  }
+}
