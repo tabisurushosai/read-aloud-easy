@@ -71,3 +71,37 @@ export interface DifficultyEntry {
   text: string;
   severity: DifficultySeverity;
 }
+
+export interface SpeedPitchValues {
+  speed: number;
+  pitch: number;
+}
+
+export interface SpeedPitchRange {
+  min: number;
+  max: number;
+  step: number;
+  defaultValue: number;
+}
+
+export interface SpeedPitchPreset {
+  id: string;
+  labelKey: string;
+  speed: number;
+  pitch: number;
+}
+
+export interface SpeedPitchState {
+  values: SpeedPitchValues;
+  presetId: string | null;
+}
+
+export interface SpeedPitchMessage {
+  type:
+    | 'SPEED_PITCH_SET'
+    | 'SPEED_PITCH_RESET'
+    | 'SPEED_PITCH_APPLY_PRESET'
+    | 'GET_SPEED_PITCH_STATE';
+  values?: Partial<SpeedPitchValues>;
+  presetId?: string;
+}

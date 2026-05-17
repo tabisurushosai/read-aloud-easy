@@ -29,7 +29,7 @@
 - [x] T022: difficult-highlight — 設計
 - [x] T023: difficult-highlight — 実装
 - [x] T024: difficult-highlight — テスト・整合
-- [ ] T025: speed-pitch — 設計
+- [x] T025: speed-pitch — 設計
 - [ ] T026: speed-pitch — 実装
 - [ ] T027: speed-pitch — テスト・整合
 - [ ] T028: bookmark — 設計
