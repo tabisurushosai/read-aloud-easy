@@ -1,0 +1,54 @@
+{
+  "appName": {
+    "message": "やさしい読み上げ",
+    "description": "The name of the extension."
+  },
+  "appDesc": {
+    "message": "ディスレクシア対応 Web 読み上げ (速度調整、ふりがな、難読箇所ハイライト)",
+    "description": "The description of the extension."
+  },
+  "popup_title": {
+    "message": "やさしい読み上げ",
+    "description": "Title of the popup"
+  },
+  "popup_play": {
+    "message": "再生",
+    "description": "Play button text"
+  },
+  "popup_pause": {
+    "message": "一時停止",
+    "description": "Pause button text"
+  },
+  "popup_stop": {
+    "message": "停止",
+    "description": "Stop button text"
+  },
+  "popup_furigana": {
+    "message": "ふりがな",
+    "description": "Furigana toggle text"
+  },
+  "popup_highlight": {
+    "message": "ハイライト",
+    "description": "Highlight toggle text"
+  },
+  "popup_speed": {
+    "message": "速度",
+    "description": "Speed control label"
+  },
+  "popup_pitch": {
+    "message": "ピッチ",
+    "description": "Pitch control label"
+  },
+  "popup_bookmark": {
+    "message": "ブックマーク",
+    "description": "Bookmark button text"
+  },
+  "options_title": {
+    "message": "設定",
+    "description": "Options page title"
+  },
+  "options_save": {
+    "message": "保存",
+    "description": "Save button text"
+  }
+}

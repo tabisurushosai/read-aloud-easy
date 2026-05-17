@@ -26,3 +26,8 @@ YOLO mode is enabled. All tool calls will be automatically approved.
 YOLO mode is enabled. All tool calls will be automatically approved.
 Ripgrep is not available. Falling back to GrepTool.
 Attempt 1 failed: You have exhausted your capacity on this model. Your quota will reset after 2s.. Retrying after 5219ms...
+Completed T004: Implement manifest.json with V3 configuration and required permissions.
+[2026-05-17 23:05:23] [read-aloud-easy Loop 5] 残 31 タスク (yolo)...
+YOLO mode is enabled. All tool calls will be automatically approved.
+YOLO mode is enabled. All tool calls will be automatically approved.
+Ripgrep is not available. Falling back to GrepTool.
