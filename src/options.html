@@ -2,9 +2,26 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>Options</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="options_title">Options</title>
+    <link rel="stylesheet" href="./options.css">
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1 data-i18n="options_title">Settings</h1>
+        </header>
+        <main>
+            <section id="general-settings">
+                <!-- Settings will be added here in future tasks -->
+                <p>Coming soon...</p>
+            </section>
+            <div class="actions">
+                <button id="save" class="btn-primary" data-i18n="options_save">Save</button>
+            </div>
+            <div id="status" class="status-message"></div>
+        </main>
+    </div>
     <script type="module" src="./options.ts"></script>
 </body>
 </html>
