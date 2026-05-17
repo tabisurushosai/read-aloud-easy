@@ -9,7 +9,7 @@ export interface TTSOptions {
 }
 
 export interface TTSMessage {
-  type: 'TTS_PLAY' | 'TTS_PAUSE' | 'TTS_RESUME' | 'TTS_STOP';
+  type: 'TTS_PLAY' | 'TTS_PAUSE' | 'TTS_RESUME' | 'TTS_STOP' | 'GET_TTS_STATUS';
   text?: string;
   options?: TTSOptions;
 }

@@ -1,3 +1,8 @@
+import { TTSManager } from './tts';
+import { TTSMessage } from './types';
+
+const ttsManager = new TTSManager();
+
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
     chrome.storage.local.set({
@@ -9,6 +14,31 @@ chrome.runtime.onInstalled.addListener((details) => {
     }, () => {
       console.log('Default settings initialized.');
     });
+  }
+});
+
+chrome.runtime.onMessage.addListener((message: TTSMessage, sender, sendResponse) => {
+  switch (message.type) {
+    case 'TTS_PLAY':
+      if (message.text) {
+        ttsManager.speak(message.text, message.options)
+          .then(() => sendResponse({ success: true }))
+          .catch((error) => sendResponse({ success: false, error: error.message }));
+        return true; // Keep channel open for async response
+      }
+      break;
+    case 'TTS_PAUSE':
+      ttsManager.pause().then(() => sendResponse({ success: true }));
+      return true;
+    case 'TTS_RESUME':
+      ttsManager.resume().then(() => sendResponse({ success: true }));
+      return true;
+    case 'TTS_STOP':
+      ttsManager.stop().then(() => sendResponse({ success: true }));
+      return true;
+    case 'GET_TTS_STATUS':
+      sendResponse({ status: ttsManager.getStatus() });
+      break;
   }
 });
 
