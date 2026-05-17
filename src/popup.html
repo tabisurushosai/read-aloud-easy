@@ -9,7 +9,14 @@
 <body>
     <div class="container">
         <header>
-            <h1 data-i18n="popup_title">やさしい読み上げ</h1>
+            <div class="header-row">
+                <h1 data-i18n="popup_title">やさしい読み上げ</h1>
+                <span id="premium-badge" class="premium-badge" aria-live="polite"></span>
+            </div>
+            <div id="premium-banner" class="premium-banner" hidden>
+                <span id="premium-banner-text" class="premium-banner-text"></span>
+                <button type="button" id="premium-upgrade" class="premium-upgrade" data-i18n="premium_upgrade_cta">Premium にアップグレード</button>
+            </div>
         </header>
 
         <main>
@@ -58,6 +65,7 @@
             <section class="actions bookmark-actions">
                 <button id="bookmark" data-i18n="popup_bookmark_add">ブックマークに追加</button>
                 <span id="bookmark-status" class="bookmark-status" aria-live="polite"></span>
+                <span id="bookmark-quota" class="bookmark-quota"></span>
             </section>
 
             <section class="bookmarks" aria-labelledby="bookmarks-heading">

@@ -118,5 +118,41 @@
   "preset_reset": {
     "message": "リセット",
     "description": "Reset speed and pitch"
+  },
+  "premium_badge_free": {
+    "message": "無料",
+    "description": "Badge label shown to free-tier users"
+  },
+  "premium_badge_trial": {
+    "message": "お試し中",
+    "description": "Badge label shown to users in trial"
+  },
+  "premium_badge_premium": {
+    "message": "Premium",
+    "description": "Badge label shown to premium users"
+  },
+  "premium_trial_remaining": {
+    "message": "お試し残り $1 日",
+    "description": "Trial countdown shown to users in trial; $1 is days remaining"
+  },
+  "premium_trial_ended": {
+    "message": "お試し期間が終了しました",
+    "description": "Shown after trial has expired for non-premium users"
+  },
+  "premium_upgrade_cta": {
+    "message": "Premium にアップグレード",
+    "description": "Upgrade button label"
+  },
+  "premium_locked_hint": {
+    "message": "Premium で解放",
+    "description": "Inline hint shown next to locked features"
+  },
+  "premium_bookmarks_unlimited": {
+    "message": "ブックマーク: 無制限",
+    "description": "Caption shown when user has unlimited bookmarks"
+  },
+  "premium_bookmarks_limited": {
+    "message": "ブックマーク: 残り $1/$2",
+    "description": "Caption shown to free users; $1 is remaining count, $2 is cap"
   }
 }

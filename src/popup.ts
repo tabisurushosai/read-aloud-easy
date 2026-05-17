@@ -11,6 +11,11 @@ import {
   PREMIUM_BOOKMARK_LIMIT,
 } from './bookmark';
 import {
+  ensureTrialStarted,
+  getPremiumStatus,
+  PremiumStatus,
+} from './premium';
+import {
   Bookmark,
   DifficultHighlightMessage,
   FuriganaMessage,
@@ -22,7 +27,44 @@ import {
 document.addEventListener('DOMContentLoaded', async () => {
   applyI18nToDoc();
 
+  await ensureTrialStarted();
   const settings = await storage.getSettings();
+  const premium: PremiumStatus = await getPremiumStatus();
+
+  const badgeEl = document.getElementById('premium-badge');
+  const bannerEl = document.getElementById('premium-banner');
+  const bannerTextEl = document.getElementById('premium-banner-text');
+  const upgradeBtn = document.getElementById('premium-upgrade') as HTMLButtonElement | null;
+  if (badgeEl) {
+    badgeEl.classList.remove('premium', 'trial', 'free');
+    if (premium.isPremium) {
+      badgeEl.classList.add('premium');
+      badgeEl.textContent = t('premium_badge_premium');
+    } else if (premium.isTrial) {
+      badgeEl.classList.add('trial');
+      badgeEl.textContent = t('premium_badge_trial');
+    } else {
+      badgeEl.classList.add('free');
+      badgeEl.textContent = t('premium_badge_free');
+    }
+  }
+  if (bannerEl) {
+    if (premium.isPremium) {
+      bannerEl.hidden = true;
+    } else {
+      bannerEl.hidden = false;
+      if (bannerTextEl) {
+        bannerTextEl.textContent = premium.isTrial
+          ? t('premium_trial_remaining', String(premium.trialDaysRemaining))
+          : t('premium_trial_ended');
+      }
+    }
+  }
+  upgradeBtn?.addEventListener('click', () => {
+    void chrome.runtime
+      .sendMessage({ type: 'PREMIUM_OPEN_UPGRADE' })
+      .catch(() => undefined);
+  });
 
   const speedInput = document.getElementById('speed') as HTMLInputElement | null;
   const pitchInput = document.getElementById('pitch') as HTMLInputElement | null;
@@ -233,11 +275,26 @@ document.addEventListener('DOMContentLoaded', async () => {
   const bookmarkListEl = document.getElementById('bookmark-list') as HTMLUListElement | null;
   const bookmarkEmptyEl = document.getElementById('bookmark-empty');
 
-  const bookmarkLimit = settings.premium_unlocked
+  const bookmarkLimit = premium.hasAccess
     ? PREMIUM_BOOKMARK_LIMIT
     : FREE_BOOKMARK_LIMIT;
   const storedBookmarks = await storage.getBookmarks();
   const bookmarkController = new BookmarkController(storedBookmarks, bookmarkLimit);
+
+  const bookmarkQuotaEl = document.getElementById('bookmark-quota');
+  const renderBookmarkQuota = () => {
+    if (!bookmarkQuotaEl) return;
+    if (premium.hasAccess) {
+      bookmarkQuotaEl.textContent = t('premium_bookmarks_unlimited');
+    } else {
+      const used = bookmarkController.list({}).length;
+      const remaining = Math.max(0, FREE_BOOKMARK_LIMIT - used);
+      bookmarkQuotaEl.textContent = t('premium_bookmarks_limited', [
+        String(remaining),
+        String(FREE_BOOKMARK_LIMIT),
+      ]);
+    }
+  };
 
   const persistBookmarks = async () => {
     await storage.setBookmarks(bookmarkController.getState().bookmarks);
@@ -316,6 +373,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (bookmarkEmptyEl) {
       bookmarkEmptyEl.hidden = items.length > 0;
     }
+    renderBookmarkQuota();
   };
 
   renderBookmarks();

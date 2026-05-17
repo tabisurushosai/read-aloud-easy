@@ -118,5 +118,41 @@
   "preset_reset": {
     "message": "Reset",
     "description": "Reset speed and pitch"
+  },
+  "premium_badge_free": {
+    "message": "Free",
+    "description": "Badge label shown to free-tier users"
+  },
+  "premium_badge_trial": {
+    "message": "Trial",
+    "description": "Badge label shown to users in trial"
+  },
+  "premium_badge_premium": {
+    "message": "Premium",
+    "description": "Badge label shown to premium users"
+  },
+  "premium_trial_remaining": {
+    "message": "$1 day(s) left in trial",
+    "description": "Trial countdown shown to users in trial; $1 is days remaining"
+  },
+  "premium_trial_ended": {
+    "message": "Trial ended",
+    "description": "Shown after trial has expired for non-premium users"
+  },
+  "premium_upgrade_cta": {
+    "message": "Upgrade to Premium",
+    "description": "Upgrade button label"
+  },
+  "premium_locked_hint": {
+    "message": "Premium only",
+    "description": "Inline hint shown next to locked features"
+  },
+  "premium_bookmarks_unlimited": {
+    "message": "Bookmarks: unlimited",
+    "description": "Caption shown when user has unlimited bookmarks"
+  },
+  "premium_bookmarks_limited": {
+    "message": "Bookmarks: $1/$2 left",
+    "description": "Caption shown to free users; $1 is remaining count, $2 is cap"
   }
 }
