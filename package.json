@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint src --ext .ts",
+    "test": "tsx tests/speed-pitch.test.ts",
     "package": "mkdir -p release && zip -r release/read-aloud-easy.zip dist"
   },
   "devDependencies": {
@@ -14,6 +15,7 @@
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.0.0",
+    "tsx": "^4.22.1",
     "typescript": "^5.0.0",
     "vite": "^5.0.0"
   }
