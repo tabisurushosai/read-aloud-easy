@@ -19,3 +19,25 @@ export interface TTSState {
   currentText?: string;
   currentIndex?: number;
 }
+
+export interface FuriganaReading {
+  kanji: string;
+  reading: string;
+}
+
+export interface FuriganaOptions {
+  enabled: boolean;
+  fontSize?: string;
+  color?: string;
+  rootSelector?: string;
+}
+
+export interface FuriganaMessage {
+  type: 'FURIGANA_ENABLE' | 'FURIGANA_DISABLE' | 'FURIGANA_TOGGLE' | 'GET_FURIGANA_STATE';
+  options?: FuriganaOptions;
+}
+
+export interface FuriganaState {
+  enabled: boolean;
+  appliedCount: number;
+}
