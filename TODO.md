@@ -24,7 +24,7 @@
 - [x] T017: tts-controls — 実装
 - [x] T018: tts-controls — テスト・整合
 - [x] T019: furigana-overlay — 設計
-- [ ] T020: furigana-overlay — 実装
+- [x] T020: furigana-overlay — 実装
 - [ ] T021: furigana-overlay — テスト・整合
 - [ ] T022: difficult-highlight — 設計
 - [ ] T023: difficult-highlight — 実装
