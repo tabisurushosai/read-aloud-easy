@@ -122,6 +122,24 @@ button:hover {
   font-variant-numeric: tabular-nums;
 }
 
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.presets button {
+  flex: 1 1 auto;
+  padding: 4px 8px;
+  font-size: 0.8rem;
+}
+
+.presets button.active {
+  background-color: var(--primary-color);
+  color: #fff;
+  border-color: var(--primary-color);
+}
+
 .toggle {
   display: flex;
   align-items: center;

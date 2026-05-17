@@ -34,6 +34,13 @@
                     <input type="range" id="pitch" min="0.5" max="2.0" step="0.1" value="1.0">
                     <span id="pitch-value">1.0</span>
                 </div>
+                <div class="presets" role="group" aria-label="presets">
+                    <button type="button" class="preset" data-preset="slow" data-i18n="preset_slow">ゆっくり</button>
+                    <button type="button" class="preset" data-preset="normal" data-i18n="preset_normal">標準</button>
+                    <button type="button" class="preset" data-preset="fast" data-i18n="preset_fast">速い</button>
+                    <button type="button" class="preset" data-preset="kids" data-i18n="preset_kids">子ども向け</button>
+                    <button type="button" id="reset-speed-pitch" data-i18n="preset_reset">リセット</button>
+                </div>
                 <div class="setting-item">
                     <label class="toggle">
                         <input type="checkbox" id="furigana">

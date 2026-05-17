@@ -66,5 +66,25 @@
   "popup_status_no_selection": {
     "message": "テキストを選択してください",
     "description": "Shown when play is pressed without any selected text"
+  },
+  "preset_slow": {
+    "message": "ゆっくり",
+    "description": "Slow speech preset"
+  },
+  "preset_normal": {
+    "message": "標準",
+    "description": "Normal speech preset"
+  },
+  "preset_fast": {
+    "message": "速い",
+    "description": "Fast speech preset"
+  },
+  "preset_kids": {
+    "message": "子ども向け",
+    "description": "Kid-friendly speech preset"
+  },
+  "preset_reset": {
+    "message": "リセット",
+    "description": "Reset speed and pitch"
   }
 }

@@ -1,8 +1,14 @@
 import { applyI18nToDoc, t } from './i18n';
 import { storage } from './storage';
 import {
+  PITCH_RANGE,
+  SPEED_RANGE,
+  SpeedPitchController,
+} from './speed-pitch';
+import {
   DifficultHighlightMessage,
   FuriganaMessage,
+  SpeedPitchState,
   TTSMessage,
   TTSStatus,
 } from './types';
@@ -13,26 +19,85 @@ document.addEventListener('DOMContentLoaded', async () => {
   const settings = await storage.getSettings();
 
   const speedInput = document.getElementById('speed') as HTMLInputElement | null;
+  const pitchInput = document.getElementById('pitch') as HTMLInputElement | null;
   const speedValue = document.getElementById('speed-value');
-  if (speedInput && speedValue) {
-    speedInput.value = (settings.speed ?? 1.0).toString();
-    speedValue.textContent = speedInput.value;
-    speedInput.addEventListener('input', () => {
-      speedValue.textContent = speedInput.value;
-      storage.set('speed', parseFloat(speedInput.value));
+  const pitchValue = document.getElementById('pitch-value');
+  const presetButtons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>('.preset[data-preset]'),
+  );
+  const resetButton = document.getElementById(
+    'reset-speed-pitch',
+  ) as HTMLButtonElement | null;
+
+  const speedPitch = new SpeedPitchController({
+    speed: settings.speed,
+    pitch: settings.pitch,
+  });
+
+  if (speedInput) {
+    speedInput.min = SPEED_RANGE.min.toString();
+    speedInput.max = SPEED_RANGE.max.toString();
+    speedInput.step = SPEED_RANGE.step.toString();
+  }
+  if (pitchInput) {
+    pitchInput.min = PITCH_RANGE.min.toString();
+    pitchInput.max = PITCH_RANGE.max.toString();
+    pitchInput.step = PITCH_RANGE.step.toString();
+  }
+
+  const renderSpeedPitch = (state: SpeedPitchState) => {
+    const speedStr = state.values.speed.toFixed(1);
+    const pitchStr = state.values.pitch.toFixed(1);
+    if (speedInput) speedInput.value = speedStr;
+    if (pitchInput) pitchInput.value = pitchStr;
+    if (speedValue) speedValue.textContent = speedStr;
+    if (pitchValue) pitchValue.textContent = pitchStr;
+    for (const btn of presetButtons) {
+      const active = btn.dataset.preset === state.presetId;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    }
+  };
+
+  const persistSpeedPitch = async (state: SpeedPitchState) => {
+    await storage.setSettings({
+      speed: state.values.speed,
+      pitch: state.values.pitch,
+    });
+  };
+
+  renderSpeedPitch(speedPitch.getState());
+  // Persist normalized values in case storage held out-of-range data.
+  await persistSpeedPitch(speedPitch.getState());
+
+  speedInput?.addEventListener('input', () => {
+    const next = speedPitch.set({ speed: parseFloat(speedInput.value) });
+    renderSpeedPitch(next);
+    void persistSpeedPitch(next);
+  });
+
+  pitchInput?.addEventListener('input', () => {
+    const next = speedPitch.set({ pitch: parseFloat(pitchInput.value) });
+    renderSpeedPitch(next);
+    void persistSpeedPitch(next);
+  });
+
+  for (const btn of presetButtons) {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.preset;
+      if (!id) return;
+      const next = speedPitch.applyPreset(id);
+      if (!next) return;
+      renderSpeedPitch(next);
+      void persistSpeedPitch(next);
     });
   }
 
-  const pitchInput = document.getElementById('pitch') as HTMLInputElement | null;
-  const pitchValue = document.getElementById('pitch-value');
-  if (pitchInput && pitchValue) {
-    pitchInput.value = (settings.pitch ?? 1.0).toString();
-    pitchValue.textContent = pitchInput.value;
-    pitchInput.addEventListener('input', () => {
-      pitchValue.textContent = pitchInput.value;
-      storage.set('pitch', parseFloat(pitchInput.value));
-    });
-  }
+  resetButton?.addEventListener('click', () => {
+    const next = speedPitch.reset();
+    renderSpeedPitch(next);
+    void persistSpeedPitch(next);
+  });
 
   const sendToActiveTab = async (msg: FuriganaMessage | DifficultHighlightMessage) => {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -133,14 +198,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    const current = await storage.getSettings();
+    const values = speedPitch.getState().values;
     setStatus('playing');
     const res = await send<{ success: boolean; status?: TTSStatus; error?: string }>({
       type: 'TTS_PLAY',
       text,
       options: {
-        rate: current.speed,
-        pitch: current.pitch,
+        rate: values.speed,
+        pitch: values.pitch,
       },
     });
     setStatus(res?.status ?? 'stopped');

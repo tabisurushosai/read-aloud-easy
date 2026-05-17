@@ -66,5 +66,25 @@
   "popup_status_no_selection": {
     "message": "Please select some text first",
     "description": "Shown when play is pressed without any selected text"
+  },
+  "preset_slow": {
+    "message": "Slow",
+    "description": "Slow speech preset"
+  },
+  "preset_normal": {
+    "message": "Normal",
+    "description": "Normal speech preset"
+  },
+  "preset_fast": {
+    "message": "Fast",
+    "description": "Fast speech preset"
+  },
+  "preset_kids": {
+    "message": "Kids",
+    "description": "Kid-friendly speech preset"
+  },
+  "preset_reset": {
+    "message": "Reset",
+    "description": "Reset speed and pitch"
   }
 }
