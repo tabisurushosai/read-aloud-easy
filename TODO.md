@@ -32,7 +32,7 @@
 - [x] T025: speed-pitch — 設計
 - [x] T026: speed-pitch — 実装
 - [x] T027: speed-pitch — テスト・整合
-- [ ] T028: bookmark — 設計
+- [x] T028: bookmark — 設計
 - [ ] T029: bookmark — 実装
 - [ ] T030: bookmark — テスト・整合
 

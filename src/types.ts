@@ -105,3 +105,54 @@ export interface SpeedPitchMessage {
   values?: Partial<SpeedPitchValues>;
   presetId?: string;
 }
+
+export interface Bookmark {
+  id: string;
+  url: string;
+  title: string;
+  snippet: string;
+  position?: number;
+  note?: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface BookmarkInput {
+  url: string;
+  title?: string;
+  snippet?: string;
+  position?: number;
+  note?: string;
+}
+
+export interface BookmarkUpdate {
+  note?: string;
+  snippet?: string;
+  position?: number;
+  title?: string;
+}
+
+export interface BookmarkListQuery {
+  url?: string;
+  limit?: number;
+  sort?: 'createdAtDesc' | 'createdAtAsc' | 'updatedAtDesc';
+}
+
+export interface BookmarkState {
+  bookmarks: Bookmark[];
+  total: number;
+}
+
+export interface BookmarkMessage {
+  type:
+    | 'BOOKMARK_CREATE'
+    | 'BOOKMARK_UPDATE'
+    | 'BOOKMARK_REMOVE'
+    | 'BOOKMARK_LIST'
+    | 'BOOKMARK_CLEAR'
+    | 'GET_BOOKMARK_STATE';
+  bookmark?: BookmarkInput;
+  id?: string;
+  update?: BookmarkUpdate;
+  query?: BookmarkListQuery;
+}
