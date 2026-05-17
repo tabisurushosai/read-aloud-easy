@@ -92,8 +92,89 @@ export class DifficultHighlighter {
     return { enabled: this.enabled, highlightedCount: this.highlightedCount };
   }
 
-  protected applyTo(_root: Node): void {
-    // Implementation arrives in T023
+  protected applyTo(root: Node): void {
+    if (this.sortedKeys.length === 0) return;
+    const textNodes = this.collectTextNodes(root);
+    for (const node of textNodes) {
+      this.processTextNode(node);
+    }
+  }
+
+  protected collectTextNodes(root: Node): Text[] {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: (node) => {
+        const text = node.nodeValue ?? '';
+        if (!text.trim()) return NodeFilter.FILTER_REJECT;
+        const parent = node.parentElement;
+        if (!parent) return NodeFilter.FILTER_REJECT;
+        if (this.isInsideSkip(parent)) return NodeFilter.FILTER_REJECT;
+        if (!this.containsAnyKey(text)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      },
+    });
+    const out: Text[] = [];
+    let cur: Node | null;
+    while ((cur = walker.nextNode())) {
+      out.push(cur as Text);
+    }
+    return out;
+  }
+
+  protected containsAnyKey(text: string): boolean {
+    for (const k of this.sortedKeys) {
+      if (text.includes(k)) return true;
+    }
+    return false;
+  }
+
+  protected processTextNode(node: Text): void {
+    const text = node.nodeValue ?? '';
+    if (!text) return;
+    const segments: Array<{ start: number; end: number; key: string; severity: DifficultySeverity }> = [];
+    let i = 0;
+    while (i < text.length) {
+      let matched: { key: string; severity: DifficultySeverity } | null = null;
+      for (const k of this.sortedKeys) {
+        if (text.startsWith(k, i)) {
+          const severity = this.entryMap.get(k)!;
+          if (this.meetsThreshold(severity)) {
+            matched = { key: k, severity };
+          }
+          break;
+        }
+      }
+      if (matched) {
+        segments.push({ start: i, end: i + matched.key.length, key: matched.key, severity: matched.severity });
+        i += matched.key.length;
+      } else {
+        i += 1;
+      }
+    }
+    if (segments.length === 0) return;
+
+    const frag = document.createDocumentFragment();
+    let cursor = 0;
+    for (const seg of segments) {
+      if (seg.start > cursor) {
+        frag.appendChild(document.createTextNode(text.slice(cursor, seg.start)));
+      }
+      frag.appendChild(this.buildHighlight(seg.key, seg.severity));
+      this.highlightedCount += 1;
+      cursor = seg.end;
+    }
+    if (cursor < text.length) {
+      frag.appendChild(document.createTextNode(text.slice(cursor)));
+    }
+    node.parentNode?.replaceChild(frag, node);
+  }
+
+  protected buildHighlight(text: string, severity: DifficultySeverity): HTMLElement {
+    const span = document.createElement('span');
+    span.className = HIGHLIGHT_CLASS;
+    span.setAttribute(HIGHLIGHT_ROOT_ATTR, '1');
+    span.setAttribute(HIGHLIGHT_SEVERITY_ATTR, severity);
+    span.textContent = text;
+    return span;
   }
 
   protected removeAll(): void {
@@ -103,8 +184,38 @@ export class DifficultHighlighter {
     });
   }
 
-  protected observe(_root: Node): void {
-    // Implementation arrives in T023
+  protected observe(root: Node): void {
+    this.disconnect();
+    this.observer = new MutationObserver((mutations) => {
+      if (!this.enabled) return;
+      const targets = new Set<Node>();
+      for (const m of mutations) {
+        if (m.type === 'childList') {
+          m.addedNodes.forEach((n) => {
+            if (n.nodeType === Node.ELEMENT_NODE) {
+              const el = n as Element;
+              if (el.classList?.contains(HIGHLIGHT_CLASS)) return;
+              if (this.isInsideSkip(el)) return;
+              targets.add(n);
+            } else if (n.nodeType === Node.TEXT_NODE) {
+              const parent = (n as Text).parentElement;
+              if (parent && !this.isInsideSkip(parent)) targets.add(n);
+            }
+          });
+        } else if (m.type === 'characterData') {
+          const parent = (m.target as Text).parentElement;
+          if (parent && !this.isInsideSkip(parent)) targets.add(m.target);
+        }
+      }
+      for (const t of targets) {
+        if (t.nodeType === Node.TEXT_NODE) {
+          this.processTextNode(t as Text);
+        } else {
+          this.applyTo(t);
+        }
+      }
+    });
+    this.observer.observe(root, { childList: true, subtree: true, characterData: true });
   }
 
   protected disconnect(): void {
