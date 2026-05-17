@@ -220,7 +220,7 @@ const overlay = new FuriganaOverlay(dict);
 
 function loadUserDict(): void {
   if (typeof chrome === 'undefined' || !chrome.storage?.local) return;
-  chrome.storage.local.get(['furigana_dict'], (result) => {
+  chrome.storage.local.get(['furigana_dict', 'furigana_enabled'], (result) => {
     const userDict = result?.furigana_dict;
     if (userDict && typeof userDict === 'object') {
       const merged = new Map(dict);
@@ -228,6 +228,9 @@ function loadUserDict(): void {
         if (typeof v === 'string') merged.set(k, v);
       }
       overlay.setDictionary(merged);
+    }
+    if (result?.furigana_enabled === true) {
+      overlay.enable({ enabled: true });
     }
   });
 }

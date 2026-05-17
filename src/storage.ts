@@ -4,6 +4,7 @@
 export interface Settings {
   speed: number;
   pitch: number;
+  furigana_enabled: boolean;
   trial_start_ts?: number;
   premium_unlocked: boolean;
   [key: string]: any;
@@ -15,6 +16,7 @@ export interface Settings {
 export const DEFAULT_SETTINGS: Settings = {
   speed: 1.0,
   pitch: 1.0,
+  furigana_enabled: false,
   premium_unlocked: false,
 };
 

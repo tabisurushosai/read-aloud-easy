@@ -9,6 +9,7 @@ chrome.runtime.onInstalled.addListener((details) => {
       speed: 1.0,
       pitch: 1.0,
       volume: 1.0,
+      furigana_enabled: false,
       trial_start_ts: Date.now(),
       premium_unlocked: false,
     }, () => {

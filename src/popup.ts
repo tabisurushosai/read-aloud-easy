@@ -1,6 +1,6 @@
 import { applyI18nToDoc, t } from './i18n';
 import { storage } from './storage';
-import { TTSMessage, TTSStatus } from './types';
+import { FuriganaMessage, TTSMessage, TTSStatus } from './types';
 
 document.addEventListener('DOMContentLoaded', async () => {
   applyI18nToDoc();
@@ -26,6 +26,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     pitchInput.addEventListener('input', () => {
       pitchValue.textContent = pitchInput.value;
       storage.set('pitch', parseFloat(pitchInput.value));
+    });
+  }
+
+  const furiganaInput = document.getElementById('furigana') as HTMLInputElement | null;
+  if (furiganaInput) {
+    furiganaInput.checked = settings.furigana_enabled ?? false;
+    furiganaInput.addEventListener('change', async () => {
+      const enabled = furiganaInput.checked;
+      await storage.set('furigana_enabled', enabled);
+      try {
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (!tab?.id || !tab.url) return;
+        const blocked = ['chrome://', 'edge://', 'about:', 'chrome-extension://', 'https://chrome.google.com/webstore'];
+        if (blocked.some((prefix) => tab.url!.startsWith(prefix))) return;
+        const msg: FuriganaMessage = enabled
+          ? { type: 'FURIGANA_ENABLE', options: { enabled: true } }
+          : { type: 'FURIGANA_DISABLE' };
+        await chrome.tabs.sendMessage(tab.id, msg);
+      } catch (e) {
+        console.error('Furigana toggle failed:', e);
+      }
     });
   }
 
