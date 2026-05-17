@@ -5,6 +5,8 @@ export interface Settings {
   speed: number;
   pitch: number;
   furigana_enabled: boolean;
+  highlight_enabled: boolean;
+  highlight_min_severity: 'low' | 'medium' | 'high';
   trial_start_ts?: number;
   premium_unlocked: boolean;
   [key: string]: any;
@@ -17,6 +19,8 @@ export const DEFAULT_SETTINGS: Settings = {
   speed: 1.0,
   pitch: 1.0,
   furigana_enabled: false,
+  highlight_enabled: false,
+  highlight_min_severity: 'medium',
   premium_unlocked: false,
 };
 

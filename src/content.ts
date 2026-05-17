@@ -1,5 +1,10 @@
 import { FuriganaOverlay } from './furigana';
-import { FuriganaMessage } from './types';
+import { DifficultHighlighter } from './difficult-highlight';
+import {
+  DifficultHighlightMessage,
+  DifficultyEntry,
+  FuriganaMessage,
+} from './types';
 
 const BUILTIN_DICT: Record<string, string> = {
   '私': 'わたし',
@@ -218,28 +223,106 @@ const BUILTIN_DICT: Record<string, string> = {
 const dict = new Map<string, string>(Object.entries(BUILTIN_DICT));
 const overlay = new FuriganaOverlay(dict);
 
-function loadUserDict(): void {
+const BUILTIN_DIFFICULT: DifficultyEntry[] = [
+  { text: '難読', severity: 'high' },
+  { text: '邂逅', severity: 'high' },
+  { text: '逡巡', severity: 'high' },
+  { text: '齟齬', severity: 'high' },
+  { text: '逓減', severity: 'high' },
+  { text: '畢竟', severity: 'high' },
+  { text: '辟易', severity: 'high' },
+  { text: '忌憚', severity: 'high' },
+  { text: '蹂躙', severity: 'high' },
+  { text: '吝嗇', severity: 'high' },
+  { text: '凋落', severity: 'high' },
+  { text: '逼迫', severity: 'high' },
+  { text: '熾烈', severity: 'high' },
+  { text: '剽窃', severity: 'high' },
+  { text: '瀟洒', severity: 'high' },
+  { text: '欺瞞', severity: 'high' },
+  { text: '稀有', severity: 'medium' },
+  { text: '怪訝', severity: 'medium' },
+  { text: '玄関', severity: 'medium' },
+  { text: '台所', severity: 'medium' },
+  { text: '便所', severity: 'medium' },
+  { text: '眼鏡', severity: 'medium' },
+  { text: '看護師', severity: 'medium' },
+  { text: '美味しい', severity: 'medium' },
+  { text: '頑張る', severity: 'medium' },
+  { text: '雰囲気', severity: 'medium' },
+  { text: '曖昧', severity: 'medium' },
+  { text: '憂鬱', severity: 'medium' },
+  { text: '葛藤', severity: 'medium' },
+  { text: '矛盾', severity: 'medium' },
+  { text: '貪欲', severity: 'medium' },
+  { text: '懸念', severity: 'medium' },
+  { text: '把握', severity: 'medium' },
+  { text: '網羅', severity: 'medium' },
+  { text: '披露', severity: 'medium' },
+  { text: '頻繁', severity: 'medium' },
+  { text: '俯瞰', severity: 'medium' },
+  { text: '相殺', severity: 'medium' },
+  { text: '示唆', severity: 'medium' },
+  { text: '便宜', severity: 'medium' },
+  { text: '謙遜', severity: 'medium' },
+  { text: '陳腐', severity: 'medium' },
+  { text: '杞憂', severity: 'medium' },
+  { text: '完璧', severity: 'low' },
+  { text: '簡単', severity: 'low' },
+  { text: '勉強', severity: 'low' },
+  { text: '友達', severity: 'low' },
+  { text: '会議', severity: 'low' },
+];
+
+const highlighter = new DifficultHighlighter(BUILTIN_DIFFICULT);
+
+function loadInitialState(): void {
   if (typeof chrome === 'undefined' || !chrome.storage?.local) return;
-  chrome.storage.local.get(['furigana_dict', 'furigana_enabled'], (result) => {
-    const userDict = result?.furigana_dict;
-    if (userDict && typeof userDict === 'object') {
-      const merged = new Map(dict);
-      for (const [k, v] of Object.entries(userDict as Record<string, string>)) {
-        if (typeof v === 'string') merged.set(k, v);
+  chrome.storage.local.get(
+    ['furigana_dict', 'furigana_enabled', 'difficult_entries', 'highlight_enabled', 'highlight_min_severity'],
+    (result) => {
+      const userDict = result?.furigana_dict;
+      if (userDict && typeof userDict === 'object') {
+        const merged = new Map(dict);
+        for (const [k, v] of Object.entries(userDict as Record<string, string>)) {
+          if (typeof v === 'string') merged.set(k, v);
+        }
+        overlay.setDictionary(merged);
       }
-      overlay.setDictionary(merged);
+      if (result?.furigana_enabled === true) {
+        overlay.enable({ enabled: true });
+      }
+
+      const userEntries = result?.difficult_entries;
+      if (Array.isArray(userEntries)) {
+        const filtered = userEntries.filter(
+          (e: unknown): e is DifficultyEntry =>
+            !!e &&
+            typeof (e as DifficultyEntry).text === 'string' &&
+            ['low', 'medium', 'high'].includes((e as DifficultyEntry).severity)
+        );
+        if (filtered.length > 0) {
+          highlighter.setEntries([...BUILTIN_DIFFICULT, ...filtered]);
+        }
+      }
+      if (result?.highlight_enabled === true) {
+        const minSeverity = result?.highlight_min_severity;
+        highlighter.enable({
+          enabled: true,
+          minSeverity: ['low', 'medium', 'high'].includes(minSeverity) ? minSeverity : 'medium',
+        });
+      }
     }
-    if (result?.furigana_enabled === true) {
-      overlay.enable({ enabled: true });
-    }
-  });
+  );
 }
 
-loadUserDict();
+loadInitialState();
+
+type IncomingMessage = FuriganaMessage | DifficultHighlightMessage;
 
 if (typeof chrome !== 'undefined' && chrome.runtime?.onMessage) {
   chrome.runtime.onMessage.addListener(
-    (message: FuriganaMessage, _sender, sendResponse) => {
+    (message: IncomingMessage, _sender, sendResponse) => {
       switch (message.type) {
         case 'FURIGANA_ENABLE':
           overlay.enable(message.options);
@@ -256,10 +339,25 @@ if (typeof chrome !== 'undefined' && chrome.runtime?.onMessage) {
         case 'GET_FURIGANA_STATE':
           sendResponse({ state: overlay.getState() });
           return false;
+        case 'DIFFICULT_HIGHLIGHT_ENABLE':
+          highlighter.enable(message.options);
+          sendResponse({ success: true, state: highlighter.getState() });
+          return false;
+        case 'DIFFICULT_HIGHLIGHT_DISABLE':
+          highlighter.disable();
+          sendResponse({ success: true, state: highlighter.getState() });
+          return false;
+        case 'DIFFICULT_HIGHLIGHT_TOGGLE':
+          highlighter.toggle(message.options);
+          sendResponse({ success: true, state: highlighter.getState() });
+          return false;
+        case 'GET_DIFFICULT_HIGHLIGHT_STATE':
+          sendResponse({ state: highlighter.getState() });
+          return false;
       }
       return false;
     }
   );
 }
 
-console.log('Content script initialized (furigana overlay ready).');
+console.log('Content script initialized (furigana + difficult-highlight ready).');

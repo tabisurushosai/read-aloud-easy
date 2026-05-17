@@ -1,6 +1,11 @@
 import { applyI18nToDoc, t } from './i18n';
 import { storage } from './storage';
-import { FuriganaMessage, TTSMessage, TTSStatus } from './types';
+import {
+  DifficultHighlightMessage,
+  FuriganaMessage,
+  TTSMessage,
+  TTSStatus,
+} from './types';
 
 document.addEventListener('DOMContentLoaded', async () => {
   applyI18nToDoc();
@@ -29,6 +34,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  const sendToActiveTab = async (msg: FuriganaMessage | DifficultHighlightMessage) => {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (!tab?.id || !tab.url) return;
+    const blocked = ['chrome://', 'edge://', 'about:', 'chrome-extension://', 'https://chrome.google.com/webstore'];
+    if (blocked.some((prefix) => tab.url!.startsWith(prefix))) return;
+    await chrome.tabs.sendMessage(tab.id, msg);
+  };
+
   const furiganaInput = document.getElementById('furigana') as HTMLInputElement | null;
   if (furiganaInput) {
     furiganaInput.checked = settings.furigana_enabled ?? false;
@@ -36,16 +49,33 @@ document.addEventListener('DOMContentLoaded', async () => {
       const enabled = furiganaInput.checked;
       await storage.set('furigana_enabled', enabled);
       try {
-        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-        if (!tab?.id || !tab.url) return;
-        const blocked = ['chrome://', 'edge://', 'about:', 'chrome-extension://', 'https://chrome.google.com/webstore'];
-        if (blocked.some((prefix) => tab.url!.startsWith(prefix))) return;
         const msg: FuriganaMessage = enabled
           ? { type: 'FURIGANA_ENABLE', options: { enabled: true } }
           : { type: 'FURIGANA_DISABLE' };
-        await chrome.tabs.sendMessage(tab.id, msg);
+        await sendToActiveTab(msg);
       } catch (e) {
         console.error('Furigana toggle failed:', e);
+      }
+    });
+  }
+
+  const highlightInput = document.getElementById('highlight') as HTMLInputElement | null;
+  if (highlightInput) {
+    highlightInput.checked = settings.highlight_enabled ?? false;
+    highlightInput.addEventListener('change', async () => {
+      const enabled = highlightInput.checked;
+      await storage.set('highlight_enabled', enabled);
+      try {
+        const minSeverity = settings.highlight_min_severity ?? 'medium';
+        const msg: DifficultHighlightMessage = enabled
+          ? {
+              type: 'DIFFICULT_HIGHLIGHT_ENABLE',
+              options: { enabled: true, minSeverity },
+            }
+          : { type: 'DIFFICULT_HIGHLIGHT_DISABLE' };
+        await sendToActiveTab(msg);
+      } catch (e) {
+        console.error('Highlight toggle failed:', e);
       }
     });
   }
