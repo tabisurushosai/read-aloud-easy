@@ -50,5 +50,21 @@
   "options_save": {
     "message": "Save",
     "description": "Save button text"
+  },
+  "popup_status_playing": {
+    "message": "Playing",
+    "description": "Status text while TTS is playing"
+  },
+  "popup_status_paused": {
+    "message": "Paused",
+    "description": "Status text while TTS is paused"
+  },
+  "popup_status_stopped": {
+    "message": "Stopped",
+    "description": "Status text while TTS is stopped"
+  },
+  "popup_status_no_selection": {
+    "message": "Please select some text first",
+    "description": "Shown when play is pressed without any selected text"
   }
 }

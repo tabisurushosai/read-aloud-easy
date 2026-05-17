@@ -1,23 +1,40 @@
 import { TTSOptions, TTSStatus } from './types';
 
+const clamp = (n: number, min: number, max: number) =>
+  Math.min(Math.max(n, min), max);
+
 export class TTSManager {
   private status: TTSStatus = 'stopped';
 
   async speak(text: string, options: TTSOptions = {}): Promise<void> {
-    return new Promise((resolve, reject) => {
+    // Cancel any prior speech before starting a new utterance.
+    chrome.tts.stop();
+    return new Promise((resolve) => {
       this.status = 'playing';
       chrome.tts.speak(text, {
-        rate: options.rate || 1.0,
-        pitch: options.pitch || 1.0,
-        volume: options.volume || 1.0,
+        rate: clamp(options.rate ?? 1.0, 0.1, 10.0),
+        pitch: clamp(options.pitch ?? 1.0, 0.0, 2.0),
+        volume: clamp(options.volume ?? 1.0, 0.0, 1.0),
         lang: options.lang,
+        voiceName: options.voiceName,
         onEvent: (event) => {
-          if (event.type === 'end') {
-            this.status = 'stopped';
-            resolve();
-          } else if (event.type === 'interrupted' || event.type === 'cancelled' || event.type === 'error') {
-            this.status = 'stopped';
-            reject(new Error(`TTS event: ${event.type}`));
+          switch (event.type) {
+            case 'start':
+              this.status = 'playing';
+              break;
+            case 'pause':
+              this.status = 'paused';
+              break;
+            case 'resume':
+              this.status = 'playing';
+              break;
+            case 'end':
+            case 'interrupted':
+            case 'cancelled':
+            case 'error':
+              this.status = 'stopped';
+              resolve();
+              break;
           }
         }
       });
@@ -25,27 +42,20 @@ export class TTSManager {
   }
 
   async stop(): Promise<void> {
-    return new Promise((resolve) => {
-      chrome.tts.stop();
-      this.status = 'stopped';
-      resolve();
-    });
+    chrome.tts.stop();
+    this.status = 'stopped';
   }
 
   async pause(): Promise<void> {
-    return new Promise((resolve) => {
-      chrome.tts.pause();
-      this.status = 'paused';
-      resolve();
-    });
+    if (this.status !== 'playing') return;
+    chrome.tts.pause();
+    this.status = 'paused';
   }
 
   async resume(): Promise<void> {
-    return new Promise((resolve) => {
-      chrome.tts.resume();
-      this.status = 'playing';
-      resolve();
-    });
+    if (this.status !== 'paused') return;
+    chrome.tts.resume();
+    this.status = 'playing';
   }
 
   getStatus(): TTSStatus {

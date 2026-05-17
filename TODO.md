@@ -22,7 +22,7 @@
 ## Phase 3: コア機能実装 (T016-T030 = 15タスク、上の features 5個を3タスクずつ分解)
 - [x] T016: tts-controls — 設計
 - [x] T017: tts-controls — 実装
-- [ ] T018: tts-controls — テスト・整合
+- [x] T018: tts-controls — テスト・整合
 - [ ] T019: furigana-overlay — 設計
 - [ ] T020: furigana-overlay — 実装
 - [ ] T021: furigana-overlay — テスト・整合

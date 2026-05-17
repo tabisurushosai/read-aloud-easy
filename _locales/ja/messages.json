@@ -50,5 +50,21 @@
   "options_save": {
     "message": "保存",
     "description": "Save button text"
+  },
+  "popup_status_playing": {
+    "message": "再生中",
+    "description": "Status text while TTS is playing"
+  },
+  "popup_status_paused": {
+    "message": "一時停止中",
+    "description": "Status text while TTS is paused"
+  },
+  "popup_status_stopped": {
+    "message": "停止中",
+    "description": "Status text while TTS is stopped"
+  },
+  "popup_status_no_selection": {
+    "message": "テキストを選択してください",
+    "description": "Shown when play is pressed without any selected text"
   }
 }

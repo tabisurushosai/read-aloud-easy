@@ -17,29 +17,37 @@ chrome.runtime.onInstalled.addListener((details) => {
   }
 });
 
-chrome.runtime.onMessage.addListener((message: TTSMessage, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message: TTSMessage, _sender, sendResponse) => {
   switch (message.type) {
     case 'TTS_PLAY':
-      if (message.text) {
-        ttsManager.speak(message.text, message.options)
-          .then(() => sendResponse({ success: true }))
-          .catch((error) => sendResponse({ success: false, error: error.message }));
-        return true; // Keep channel open for async response
+      if (!message.text) {
+        sendResponse({ success: false, error: 'No text provided' });
+        return false;
       }
-      break;
+      ttsManager.speak(message.text, message.options)
+        .then(() => sendResponse({ success: true, status: ttsManager.getStatus() }))
+        .catch((error) => sendResponse({ success: false, error: error?.message ?? String(error) }));
+      return true;
     case 'TTS_PAUSE':
-      ttsManager.pause().then(() => sendResponse({ success: true }));
+      ttsManager.pause().then(() =>
+        sendResponse({ success: true, status: ttsManager.getStatus() })
+      );
       return true;
     case 'TTS_RESUME':
-      ttsManager.resume().then(() => sendResponse({ success: true }));
+      ttsManager.resume().then(() =>
+        sendResponse({ success: true, status: ttsManager.getStatus() })
+      );
       return true;
     case 'TTS_STOP':
-      ttsManager.stop().then(() => sendResponse({ success: true }));
+      ttsManager.stop().then(() =>
+        sendResponse({ success: true, status: ttsManager.getStatus() })
+      );
       return true;
     case 'GET_TTS_STATUS':
       sendResponse({ status: ttsManager.getStatus() });
-      break;
+      return false;
   }
+  return false;
 });
 
 console.log('Background script loaded.');

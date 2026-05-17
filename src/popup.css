@@ -63,6 +63,16 @@ section {
   justify-content: space-between;
 }
 
+.status {
+  font-size: 0.85rem;
+  color: var(--secondary-color);
+  min-height: 1.2em;
+}
+
+.status.error {
+  color: #d9534f;
+}
+
 button {
   padding: 8px 12px;
   border: 1px solid var(--border-color);
