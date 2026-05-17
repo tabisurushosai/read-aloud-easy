@@ -26,7 +26,7 @@
 - [x] T019: furigana-overlay — 設計
 - [x] T020: furigana-overlay — 実装
 - [x] T021: furigana-overlay — テスト・整合
-- [ ] T022: difficult-highlight — 設計
+- [x] T022: difficult-highlight — 設計
 - [ ] T023: difficult-highlight — 実装
 - [ ] T024: difficult-highlight — テスト・整合
 - [ ] T025: speed-pitch — 設計

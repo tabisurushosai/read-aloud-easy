@@ -41,3 +41,33 @@ export interface FuriganaState {
   enabled: boolean;
   appliedCount: number;
 }
+
+export type DifficultySeverity = 'low' | 'medium' | 'high';
+
+export interface DifficultHighlightOptions {
+  enabled: boolean;
+  rootSelector?: string;
+  minSeverity?: DifficultySeverity;
+  color?: string;
+  backgroundColor?: string;
+  underline?: boolean;
+}
+
+export interface DifficultHighlightMessage {
+  type:
+    | 'DIFFICULT_HIGHLIGHT_ENABLE'
+    | 'DIFFICULT_HIGHLIGHT_DISABLE'
+    | 'DIFFICULT_HIGHLIGHT_TOGGLE'
+    | 'GET_DIFFICULT_HIGHLIGHT_STATE';
+  options?: DifficultHighlightOptions;
+}
+
+export interface DifficultHighlightState {
+  enabled: boolean;
+  highlightedCount: number;
+}
+
+export interface DifficultyEntry {
+  text: string;
+  severity: DifficultySeverity;
+}
