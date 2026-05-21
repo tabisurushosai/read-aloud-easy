@@ -79,6 +79,10 @@
     "message": "設定",
     "description": "Options page title"
   },
+  "options_intro": {
+    "message": "読み上げ設定は拡張機能のポップアップから変更できます。",
+    "description": "Options page guidance"
+  },
   "options_save": {
     "message": "保存",
     "description": "Save button text"

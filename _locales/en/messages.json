@@ -79,6 +79,10 @@
     "message": "Settings",
     "description": "Options page title"
   },
+  "options_intro": {
+    "message": "Adjust reading settings from the extension popup.",
+    "description": "Options page guidance"
+  },
   "options_save": {
     "message": "Save",
     "description": "Save button text"
