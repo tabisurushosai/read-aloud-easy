@@ -8,6 +8,7 @@
     "build": "vite build",
     "lint": "eslint src --ext .ts",
     "test": "tsx tests/speed-pitch.test.ts && tsx tests/bookmark.test.ts",
+    "test:run": "tsx tests/speed-pitch.test.ts && tsx tests/bookmark.test.ts",
     "package": "npm run build && node scripts/package.mjs"
   },
   "devDependencies": {
